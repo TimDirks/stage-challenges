@@ -20,11 +20,15 @@ const mazeEmptySymbol = mazeArray[0].find((symbol) => symbol !== mazeWallSymbol)
 // The symbol that will be used to mark the solution path.
 const mazePathSymbol = '#';
 
-// Get the basic maze variables.
+// Get the maze start and end positions.
 const mazeHeight = mazeArray.length;
-const mazeWidth = mazeArray[0].length;
 const mazeStart = [mazeArray[0].indexOf(mazeEmptySymbol), 0];
 const mazeEnd = [mazeArray[mazeHeight - 1].indexOf(mazeEmptySymbol), mazeHeight - 1];
+
+// Basic helper function to copy a 2 dimensional array without references.
+const copyMultiArray = (arr) => {
+    return arr.map((row) => row.slice());
+}
 
 // Basic helper function to get all existing neighbouring cells that aren't walls.
 const getOpenNeighbouringCells = (maze, cell) => {
@@ -83,9 +87,10 @@ const mapMazeSolution = (maze, filledMaze) => {
     let currentPathCell = mazeEnd;
     let pathLength = filledMaze[currentPathCell[1]][currentPathCell[0]]
 
-    while (pathLength) {
-        maze[currentPathCell[1]][currentPathCell[0]] = mazePathSymbol;
+    // Mark the maze exit with the path symbol.
+    maze[currentPathCell[1]][currentPathCell[0]] = mazePathSymbol;
 
+    while (pathLength) {
         const neighbouringCells = getOpenNeighbouringCells(filledMaze, currentPathCell);
 
         neighbouringCells.forEach(([neighbourX, neighbourY]) => {
@@ -94,7 +99,10 @@ const mapMazeSolution = (maze, filledMaze) => {
                 return;
             }
 
+            // Otherwise set the cell as the new current path and mark the location with the path symbol.
             currentPathCell = [neighbourX, neighbourY];
+
+            maze[currentPathCell[1]][currentPathCell[0]] = mazePathSymbol;
 
             pathLength--;
         });
@@ -104,9 +112,14 @@ const mapMazeSolution = (maze, filledMaze) => {
 }
 
 // Make a copy of the maze array to prevent the original from being altered.
-const filledMazeArray = fillMazeWithSteps([...mazeArray]);
+const filledMazeArray = fillMazeWithSteps(copyMultiArray(mazeArray));
 
 // Follow the quickest path from start to finish and mark it with the path symbol.
-const mappedMazeArray = mapMazeSolution([...mazeArray], filledMazeArray);
+const mappedMazeArray = mapMazeSolution(copyMultiArray(mazeArray), filledMazeArray);
 
-console.log(mappedMazeArray.map(l => l.join``).join`\n`);
+// Map the array back to a readable format and write it to the output.txt file.
+const mappedMaze = mappedMazeArray
+    .map(l => l.join(''))
+    .join('\n');
+
+fs.writeFileSync('7/output.txt', mappedMaze);
