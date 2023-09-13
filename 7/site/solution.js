@@ -78,6 +78,8 @@ const loadMazeFromFile = (fileReaderEvent) => {
         .map((line) => line.split(''));
 
     drawMaze(mazeArray);
+
+    mazeSolveButton.disabled = false;
 }
 
 const readMazeFile = (file) => {
@@ -109,6 +111,8 @@ const solveMaze = () => {
 
     // Follow the quickest path from start to finish and mark it with the path symbol.
     solvedMazeArray = mapMazeSolution(copyMultiArray(mazeArray), filledMazeArray);
+
+    stepSolveButton.disabled = false;
 }
 
 const stepMaze = () => {
@@ -207,7 +211,7 @@ const fillMazeWithSteps = (maze) => {
 // maze with the path symbol.
 const mapMazeSolution = (maze, filledMaze) => {
     let currentPathCell = [maze[maze.length - 1].indexOf(mazeEmptySymbol), maze.length - 1];
-    console.log(currentPathCell);
+
     let pathLength = filledMaze[currentPathCell[1]][currentPathCell[0]]
 
     // Mark the maze exit with the path symbol.

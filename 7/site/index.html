@@ -11,21 +11,33 @@
 </head>
 <body>
     <div>
-        <div>
-            Maze solving!
+        <h1 class="title">
+            Solve a maze!
+        </h1>
+
+        <div class="controls">
+            <label for="input-maze-file">
+                Upload a file
+            </label>
+
+            <input id="input-maze-file" type="file">
+
+            <button id="button-solve-maze" disabled>
+                Solve maze
+            </button>
+
+            <button id="button-solve-step" disabled>
+                Solve step
+            </button>
         </div>
-
-        <input type="file" id="input-maze-file">
-
-        <button id="button-solve-maze">Solve maze</button>
-
-        <button id="button-solve-step">Solve step</button>
     </div>
 
-    <canvas
-        id="maze"
-        width="0"
-        height="0"
-    ></canvas>
+    <div class="maze-canvas">
+        <canvas
+            id="maze"
+            width="0"
+            height="0"
+        ></canvas>
+    </div>
 </body>
 </html>
