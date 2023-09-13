@@ -1,9 +1,13 @@
+// Get all the controls to add event listeners to.
 const mazeFileInput = document.getElementById('input-maze-file');
 const mazeSolveButton = document.getElementById('button-solve-maze');
 const stepSolveButton = document.getElementById('button-solve-step');
+
+// The maze will be visualized on a canvas.
 const mazeCanvas = document.getElementById('maze');
 const mazeCanvasContext = mazeCanvas.getContext('2d');
 
+// Set the maze cell size and prep the images used as bushes and the character.
 const mazeCanvasCellSize = 20;
 const bushImg = new Image;
 const characterImg = new Image;
@@ -14,23 +18,29 @@ characterImg.src = 'assets/character.png';
 let mazeArray = [];
 let solvedMazeArray = [];
 
+// Used to store every step of the maze solution path.
 const mazeSolveSteps = {};
 let mazeSolveStep = -1;
 let maxMazeSolveSteps = -1;
 
+// A quick helper function to clear the canvas for redrawing.
 const clearCanvas = () => {
     mazeCanvasContext.clearRect(0, 0, mazeCanvas.width, mazeCanvas.height);
 }
 
+// Draw the maze onto the canvas.
 const drawMaze = (maze) => {
     clearCanvas();
 
+    // Get the cell dimensions of the maze.
     const mazeHeight = maze.length;
     const mazeWidth = maze[0].length;
 
+    // Set the maze canvas size to fit the maze.
     mazeCanvas.width = mazeWidth * mazeCanvasCellSize;
     mazeCanvas.height = mazeHeight * mazeCanvasCellSize;
 
+    // Loop over each cell in the 2D maze array and either draw a bush for walls or ground for walkways.
     maze.forEach((row, yPos) => {
         row.forEach((col, xPos) => {
             switch (col) {
@@ -48,6 +58,7 @@ const drawMaze = (maze) => {
     });
 }
 
+// A quick helper function to draw an image on the canvas at a given x and y position.
 const drawMazeImg = (xPos, yPos, img) => {
     mazeCanvasContext.drawImage(
         img,
@@ -58,6 +69,7 @@ const drawMazeImg = (xPos, yPos, img) => {
     );
 }
 
+// A quick helper function to draw a square on the canvas at a given x and y position.
 const drawMazeSquare = (xPos, yPos, color) => {
     mazeCanvasContext.fillStyle = color;
 
@@ -69,6 +81,7 @@ const drawMazeSquare = (xPos, yPos, color) => {
     );
 }
 
+// Helper function to get the file input and store it in the 2D maze array.
 const loadMazeFromFile = (fileReaderEvent) => {
     const mazeTemplate = fileReaderEvent.target.result;
 
@@ -79,19 +92,26 @@ const loadMazeFromFile = (fileReaderEvent) => {
 
     drawMaze(mazeArray);
 
+    // After a file is uploaded, the "Solve maze" button gets enabled.
     mazeSolveButton.disabled = false;
 }
 
+// Helper function to read the uploaded file and convert it to plain text.
 const readMazeFile = (file) => {
     const fileReader = new FileReader();
     fileReader.readAsText(file, 'UTF-8');
 
+    // On file load success, convert the file to a usable maze representation.
     fileReader.onload = loadMazeFromFile;
+
+    // On file load error, just display an error alert.
+    // My solutions don't focus much on validation as it wasn't described in the challenges.
     fileReader.onerror = () => {
         alert('Something went wrong reading the maze file!');
     }
 }
 
+// On file input change, check to see if a file has been uploaded and, if multiple, select the first one.
 const handleMazeFileUpload = (event) => {
     if (!event.target
         || !event.target.files
@@ -105,6 +125,7 @@ const handleMazeFileUpload = (event) => {
     readMazeFile(mazeFile);
 }
 
+// Call the functions to perform Dijkstra's Shortest Path algorithm.
 const solveMaze = () => {
     // Make a copy of the maze array to prevent the original from being altered.
     const filledMazeArray = fillMazeWithSteps(copyMultiArray(mazeArray));
@@ -112,14 +133,18 @@ const solveMaze = () => {
     // Follow the quickest path from start to finish and mark it with the path symbol.
     solvedMazeArray = mapMazeSolution(copyMultiArray(mazeArray), filledMazeArray);
 
+    // After the maze is solved, the "Solve step" button gets enabled.
     stepSolveButton.disabled = false;
 }
 
+// Function to draw the next step in the maze solution path on the canvas.
 const stepMaze = () => {
+    // If all steps have already been shown, there is nothing more to draw.
     if (mazeSolveStep > maxMazeSolveSteps) {
         return;
     }
 
+    // Display the already walked path as yellow squares to visually the route taken thus far.
     if (mazeSolveStep >= 0) {
         const [curX, curY] = mazeSolveSteps[mazeSolveStep];
 
@@ -132,6 +157,7 @@ const stepMaze = () => {
         return;
     }
 
+    // Display the current step of the path with the character image.
     const [nextX, nextY] = mazeSolveSteps[mazeSolveStep];
 
     drawMazeImg(nextX, nextY, characterImg);
