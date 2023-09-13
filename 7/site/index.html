@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Maze solving algorithm visualizer</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="solution.js"></script>
+</head>
+<body>
+    <div>
+        <h1 class="title">
+            Solve a maze!
+        </h1>
+
+        <div class="controls">
+            <label for="input-maze-file">
+                Upload a file
+            </label>
+
+            <input id="input-maze-file" type="file">
+
+            <button id="button-solve-maze" disabled>
+                Solve maze
+            </button>
+
+            <button id="button-solve-step" disabled>
+                Solve step
+            </button>
+        </div>
+    </div>
+
+    <div class="maze-canvas">
+        <canvas
+            id="maze"
+            width="0"
+            height="0"
+        ></canvas>
+    </div>
+</body>
+</html>
