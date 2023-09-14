@@ -35,4 +35,42 @@ const numberToRoman = (number) => {
     return roman;
 }
 
-console.log(numberToRoman(3992));
+// Create a dictionary to test the function.
+const testData = [
+    {
+        value: 1,
+        expectedOutcome: 'I',
+    },
+    {
+        value: 14,
+        expectedOutcome: 'XIV',
+    },
+    {
+        value: 159,
+        expectedOutcome: 'CLIX',
+    },
+    {
+        value: 296,
+        expectedOutcome: 'CCXCVI',
+    },
+    {
+        value: 789,
+        expectedOutcome: 'DCCLXXXIX',
+    },
+    {
+        value: 3888,
+        expectedOutcome: 'MMMDCCCLXXXVIII',
+    },
+    {
+        value: 3992,
+        expectedOutcome: 'MMMCMXCII',
+    },
+];
+
+// Test all the cases to see if the function works.
+testData.forEach(({value, expectedOutcome}) => {
+    const functionOutcome = numberToRoman(value);
+    const outcomesMatch = expectedOutcome === functionOutcome;
+
+    console.log(`The Roman Numeral for ${value} is ${expectedOutcome}. The function returned ${functionOutcome} which is ${outcomesMatch ? 'correct' : 'incorrect'}!`);
+});
